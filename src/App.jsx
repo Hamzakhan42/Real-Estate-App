@@ -1,5 +1,10 @@
+import { BrowserRouter } from 'react-router-dom'
 import Home from './pages/Home/Home'
 
 export default function App() {
-  return <Home />
+  return (
+    <BrowserRouter>
+      <Home />
+    </BrowserRouter>
+  )
 }

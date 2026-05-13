@@ -1,5 +1,6 @@
 import Navbar from '../../components/layout/Navbar'
 import HeroCarousel from '../../components/features/HeroCarousel'
+import AdvancedSearchBar from '../../components/features/AdvancedSearchBar/AdvancedSearchBar'
 import FeaturedApartmentsMarquee from '../../components/features/FeaturedApartmentsMarquee'
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
       <Navbar />
 
       <HeroCarousel />
+      <AdvancedSearchBar />
 
       <section className="py-12 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
