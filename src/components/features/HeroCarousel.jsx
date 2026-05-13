@@ -80,9 +80,7 @@ export default function HeroCarousel() {
                     >
                       {slide.cta}
                     </a>
-                    <span className="text-sm text-white/70">
-                      Auto-plays every 4s • pauses on hover
-                    </span>
+
                   </div>
                 </div>
               </div>
