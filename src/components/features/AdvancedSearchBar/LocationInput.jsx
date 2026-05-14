@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Search, Loader2 } from 'lucide-react';
-import { clsx } from 'clsx';
+import { useState, useEffect, useRef } from 'react'
+import { MapPin, Search, Loader2 } from 'lucide-react'
+import { clsx } from 'clsx'
 
 const MOCK_SUGGESTIONS = [
   'DHA Phase 6, Lahore',
@@ -9,56 +9,53 @@ const MOCK_SUGGESTIONS = [
   'Emaar Canyon Views, Islamabad',
   'Clifton, Karachi',
   'Defense, Karachi',
-];
+]
 
 const LocationInput = ({ value, onChange, onDebounceStateChange }) => {
-  const [query, setQuery] = useState(value || '');
-  const [suggestions, setSuggestions] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const containerRef = useRef(null);
+  const [query, setQuery] = useState(value || '')
+  const [suggestions, setSuggestions] = useState([])
+  const [isOpen, setIsOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const containerRef = useRef(null)
 
-  // Debounce logic
   useEffect(() => {
     if (!query) {
-      setSuggestions([]);
-      return;
+      setSuggestions([])
+      return
     }
 
     const timer = setTimeout(() => {
-      setLoading(true);
-      onDebounceStateChange?.(true);
-      
-      // Mock API call
+      setLoading(true)
+      onDebounceStateChange?.(true)
+
       setTimeout(() => {
-        const filtered = MOCK_SUGGESTIONS.filter(s => 
+        const filtered = MOCK_SUGGESTIONS.filter((s) =>
           s.toLowerCase().includes(query.toLowerCase())
-        );
-        setSuggestions(filtered);
-        setLoading(false);
-        onDebounceStateChange?.(false);
-      }, 500);
-    }, 300);
+        )
+        setSuggestions(filtered)
+        setLoading(false)
+        onDebounceStateChange?.(false)
+      }, 500)
+    }, 300)
 
-    return () => clearTimeout(timer);
-  }, [query, onDebounceStateChange]);
+    return () => clearTimeout(timer)
+  }, [query, onDebounceStateChange])
 
-  // Close dropdown on click outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (containerRef.current && !containerRef.current.contains(e.target)) {
-        setIsOpen(false);
+        setIsOpen(false)
       }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const handleSelect = (suggestion) => {
-    setQuery(suggestion);
-    onChange(suggestion);
-    setIsOpen(false);
-  };
+    setQuery(suggestion)
+    onChange(suggestion)
+    setIsOpen(false)
+  }
 
   return (
     <div className="relative flex-1 min-w-[200px]" ref={containerRef}>
@@ -69,15 +66,15 @@ const LocationInput = ({ value, onChange, onDebounceStateChange }) => {
           id="location"
           type="text"
           className={clsx(
-            "w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl",
-            "focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500",
-            "transition-all duration-200 text-gray-700 placeholder:text-gray-400"
+            'w-full pl-10 pr-10 py-3 bg-white border border-gray-200 rounded-xl',
+            'focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500',
+            'transition-all duration-200 text-gray-700 placeholder:text-gray-400'
           )}
           placeholder="Enter location, area or city..."
           value={query}
           onChange={(e) => {
-            setQuery(e.target.value);
-            setIsOpen(true);
+            setQuery(e.target.value)
+            setIsOpen(true)
           }}
           onFocus={() => setIsOpen(true)}
           autoComplete="off"
@@ -91,7 +88,6 @@ const LocationInput = ({ value, onChange, onDebounceStateChange }) => {
         </div>
       </div>
 
-      {/* Suggestions Dropdown */}
       {isOpen && (query.length > 0 || suggestions.length > 0) && (
         <div className="absolute z-50 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           {suggestions.length > 0 ? (
@@ -117,7 +113,7 @@ const LocationInput = ({ value, onChange, onDebounceStateChange }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default LocationInput;
+export default LocationInput

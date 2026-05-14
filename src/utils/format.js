@@ -1,0 +1,1 @@
+export const stripTicks = (url) => url?.replaceAll('`', '')

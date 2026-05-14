@@ -1,9 +1,8 @@
 import { useMemo } from 'react'
-
+import { Link } from 'react-router-dom'
 import { cn } from '../../utils/cn'
+import { stripTicks } from '../../utils/format'
 import { properties } from '../../utils/mockData'
-
-const stripTicks = (url) => url?.replaceAll('`', '')
 
 function PropertyCard({ item }) {
   return (
@@ -31,13 +30,13 @@ function PropertyCard({ item }) {
             </span>
           </div>
 
-          <button
-            type="button"
+          <Link
+            to={`/property/${item.id}`}
             aria-label={`View details for ${item.name}`}
-            className="mt-4 w-full rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-slate-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-900/40"
+            className="mt-4 w-full rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-slate-800 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-900/40 inline-flex items-center justify-center"
           >
             View Details
-          </button>
+          </Link>
         </div>
       </div>
     </article>
@@ -84,4 +83,3 @@ export default function FeaturedApartmentsMarquee() {
     </section>
   )
 }
-

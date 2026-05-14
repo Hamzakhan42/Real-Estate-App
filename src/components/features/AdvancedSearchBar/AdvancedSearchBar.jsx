@@ -1,171 +1,162 @@
-import React, { useState } from 'react';
-import { Search, Filter, X, RotateCcw, Building2, Bed, Bath, Sparkles, SlidersHorizontal } from 'lucide-react';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { useState } from 'react'
+import { Search, Filter, X, RotateCcw, Building2, Bed, Bath, SlidersHorizontal } from 'lucide-react'
+import { clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+import { useSearchFilters } from '../../../hooks/useSearchFilters'
+import LocationInput from './LocationInput'
+import RangeInput from './RangeInput'
+import { SelectField, MultiSelect } from './SelectField'
+import { PropertyStatusToggle, FilterChips } from './FilterElements'
 
-import { useSearchFilters } from '../../../hooks/useSearchFilters';
-import LocationInput from './LocationInput';
-import RangeInput from './RangeInput';
-import { SelectField, MultiSelect } from './SelectField';
-import { PropertyStatusToggle, FilterChips } from './FilterElements';
+const cn = (...inputs) => twMerge(clsx(inputs))
+
+const propertyTypes = ['All', 'Apartment', 'House', 'Villa', 'Plot', 'Commercial']
+const bedBathOptions = ['All', 'Studio', '1', '2', '3', '4', '5', '5+']
+const amenitiesOptions = ['Parking', 'Garden', 'Gym', 'Security', 'Furnished', 'Pool', 'Elevator']
+
+const SearchContent = ({ filters, updateFilter, onSearch, clearFilters, isSearching, isDebouncing, mobile = false }) => (
+  <div className={cn('flex flex-col gap-6', !mobile && 'lg:flex-row lg:items-end lg:gap-4')}>
+    <div className={cn('flex-1', !mobile && 'lg:min-w-[300px]')}>
+      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-1 mb-1.5 block">
+        Location
+      </label>
+      <LocationInput
+        value={filters.location}
+        onChange={(val) => updateFilter('location', val)}
+        onDebounceStateChange={() => {}}
+      />
+    </div>
+
+    <div className={cn(!mobile && 'lg:w-48')}>
+      <SelectField
+        label="Type"
+        options={propertyTypes}
+        value={filters.type}
+        onChange={(val) => updateFilter('type', val)}
+        icon={Building2}
+      />
+    </div>
+
+    <div className={cn(!mobile && 'lg:w-64')}>
+      <RangeInput
+        label="Price Range"
+        minName="priceMin"
+        maxName="priceMax"
+        minValue={filters.priceMin}
+        maxValue={filters.priceMax}
+        onChange={updateFilter}
+        prefix="$"
+      />
+    </div>
+
+    {!mobile && (
+      <button
+        type="button"
+        onClick={() => {}}
+        className="p-3 bg-gray-50 border border-gray-200 rounded-xl hover:bg-white hover:border-gray-300 transition-all text-gray-600 hidden lg:flex"
+        title="More Filters"
+      >
+        <SlidersHorizontal className="w-5 h-5" />
+      </button>
+    )}
+
+    <div className={cn('flex items-center gap-3', !mobile && 'lg:mb-0.5')}>
+      <button
+        type="button"
+        onClick={onSearch}
+        disabled={isSearching || isDebouncing}
+        className={cn(
+          'flex-1 lg:flex-none lg:px-8 py-3.5 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20',
+          'hover:bg-blue-700 hover:shadow-blue-700/30 active:scale-[0.98] transition-all',
+          'flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed'
+        )}
+      >
+        {isSearching ? (
+          <RotateCcw className="w-5 h-5 animate-spin" />
+        ) : (
+          <Search className="w-5 h-5" />
+        )}
+        <span>{isSearching ? 'Searching...' : 'Search'}</span>
+      </button>
+
+      {mobile && (
+        <button
+          type="button"
+          onClick={clearFilters}
+          className="flex-1 py-3.5 bg-gray-100 text-gray-600 rounded-xl font-bold hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
+        >
+          <RotateCcw className="w-4 h-4" />
+          Clear
+        </button>
+      )}
+    </div>
+  </div>
+)
 
 const AdvancedSearchBar = () => {
-  const { 
-    filters, 
-    updateFilter, 
-    clearFilters, 
-    applySearch, 
-    getQueryObject, 
-    isDebouncing 
-  } = useSearchFilters();
+  const {
+    filters,
+    updateFilter,
+    clearFilters,
+    applySearch,
+    getQueryObject,
+    isDebouncing,
+  } = useSearchFilters()
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isSearching, setIsSearching] = useState(false)
 
   const handleSearch = () => {
-    setIsSearching(true);
-    // Simulate API search
+    setIsSearching(true)
     setTimeout(() => {
-      applySearch();
-      setIsSearching(false);
-      setIsMobileMenuOpen(false);
-      console.log('API Query Object:', getQueryObject());
-    }, 800);
-  };
+      applySearch()
+      setIsSearching(false)
+      setIsMobileMenuOpen(false)
+      console.log('API Query Object:', getQueryObject())
+    }, 800)
+  }
 
   const handleRemoveFilter = (key) => {
     if (key === 'amenities') {
-      updateFilter(key, []);
+      updateFilter(key, [])
     } else {
-      updateFilter(key, key.includes('Min') || key.includes('Max') ? '' : 'All');
+      updateFilter(key, key.includes('Min') || key.includes('Max') ? '' : 'All')
     }
-  };
-
-  const propertyTypes = ['All', 'Apartment', 'House', 'Villa', 'Plot', 'Commercial'];
-  const bedBathOptions = ['All', 'Studio', '1', '2', '3', '4', '5', '5+'];
-  const amenitiesOptions = ['Parking', 'Garden', 'Gym', 'Security', 'Furnished', 'Pool', 'Elevator'];
-
-  const SearchContent = ({ mobile = false }) => (
-    <div className={clsx(
-      "flex flex-col gap-6",
-      !mobile && "lg:flex-row lg:items-end lg:gap-4"
-    )}>
-      {/* Location */}
-      <div className={clsx("flex-1", !mobile && "lg:min-w-[300px]")}>
-        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-1 mb-1.5 block">
-          Location
-        </label>
-        <LocationInput 
-          value={filters.location} 
-          onChange={(val) => updateFilter('location', val)}
-          onDebounceStateChange={() => {}}
-        />
-      </div>
-
-      {/* Property Type */}
-      <div className={clsx(!mobile && "lg:w-48")}>
-        <SelectField
-          label="Type"
-          options={propertyTypes}
-          value={filters.type}
-          onChange={(val) => updateFilter('type', val)}
-          icon={Building2}
-        />
-      </div>
-
-      {/* Price Range */}
-      <div className={clsx(!mobile && "lg:w-64")}>
-        <RangeInput
-          label="Price Range"
-          minName="priceMin"
-          maxName="priceMax"
-          minValue={filters.priceMin}
-          maxValue={filters.priceMax}
-          onChange={updateFilter}
-          prefix="$"
-        />
-      </div>
-
-      {/* Desktop Show More Button / Mobile Filters */}
-      {!mobile && (
-        <button
-          type="button"
-          onClick={() => setIsMobileMenuOpen(true)}
-          className="p-3 bg-gray-50 border border-gray-200 rounded-xl hover:bg-white hover:border-gray-300 transition-all text-gray-600 hidden lg:flex"
-          title="More Filters"
-        >
-          <SlidersHorizontal className="w-5 h-5" />
-        </button>
-      )}
-
-      {/* Action Buttons */}
-      <div className={clsx(
-        "flex items-center gap-3",
-        !mobile && "lg:mb-0.5"
-      )}>
-        <button
-          type="button"
-          onClick={handleSearch}
-          disabled={isSearching || isDebouncing}
-          className={twMerge(
-            "flex-1 lg:flex-none lg:px-8 py-3.5 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-600/20",
-            "hover:bg-blue-700 hover:shadow-blue-700/30 active:scale-[0.98] transition-all",
-            "flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-          )}
-        >
-          {isSearching ? (
-            <RotateCcw className="w-5 h-5 animate-spin" />
-          ) : (
-            <Search className="w-5 h-5" />
-          )}
-          <span>{isSearching ? 'Searching...' : 'Search'}</span>
-        </button>
-        
-        {mobile && (
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="flex-1 py-3.5 bg-gray-100 text-gray-600 rounded-xl font-bold hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
-          >
-            <RotateCcw className="w-4 h-4" />
-            Clear
-          </button>
-        )}
-      </div>
-    </div>
-  );
+  }
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 -mt-12 relative z-20">
-      {/* Search Bar Container */}
       <div className="bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-gray-100 p-4 lg:p-6">
-        <SearchContent />
-        
-        {/* Active Filter Chips */}
-        <FilterChips 
-          filters={filters} 
-          onRemove={handleRemoveFilter} 
-          onClearAll={clearFilters} 
+        <SearchContent
+          filters={filters}
+          updateFilter={updateFilter}
+          onSearch={handleSearch}
+          clearFilters={clearFilters}
+          isSearching={isSearching}
+          isDebouncing={isDebouncing}
+        />
+
+        <FilterChips
+          filters={filters}
+          onRemove={handleRemoveFilter}
+          onClearAll={clearFilters}
         />
       </div>
 
-      {/* Mobile / Advanced Filters Modal */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[100] overflow-hidden">
-          {/* Backdrop */}
-          <div 
+          <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
             onClick={() => setIsMobileMenuOpen(false)}
           />
-          
-          {/* Drawer */}
+
           <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl animate-in slide-in-from-right duration-300 flex flex-col">
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <div className="flex items-center gap-2 text-gray-900">
                 <Filter className="w-5 h-5 text-blue-600" />
                 <h2 className="text-xl font-bold">Advanced Filters</h2>
               </div>
-              <button 
+              <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
               >
@@ -174,8 +165,15 @@ const AdvancedSearchBar = () => {
             </div>
 
             <div className="flex-1 overflow-y-auto p-6 space-y-8">
-              {/* Layout for Mobile: all fields */}
-              <SearchContent mobile />
+              <SearchContent
+                filters={filters}
+                updateFilter={updateFilter}
+                onSearch={handleSearch}
+                clearFilters={clearFilters}
+                isSearching={isSearching}
+                isDebouncing={isDebouncing}
+                mobile
+              />
 
               <div className="h-px bg-gray-100" />
 
@@ -208,9 +206,9 @@ const AdvancedSearchBar = () => {
                 onUnitChange={(u) => updateFilter('areaUnit', u)}
               />
 
-              <PropertyStatusToggle 
-                value={filters.status} 
-                onChange={(val) => updateFilter('status', val)} 
+              <PropertyStatusToggle
+                value={filters.status}
+                onChange={(val) => updateFilter('status', val)}
               />
 
               <MultiSelect
@@ -233,7 +231,7 @@ const AdvancedSearchBar = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default AdvancedSearchBar;
+export default AdvancedSearchBar

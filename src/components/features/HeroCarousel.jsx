@@ -1,11 +1,9 @@
 import { useMemo, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-
 import useAutoPlay from '../../hooks/useAutoPlay'
 import { cn } from '../../utils/cn'
+import { stripTicks } from '../../utils/format'
 import { heroSlides } from '../../utils/mockData'
-
-const stripTicks = (url) => url?.replaceAll('`', '')
 
 export default function HeroCarousel() {
   const slides = useMemo(
@@ -80,7 +78,6 @@ export default function HeroCarousel() {
                     >
                       {slide.cta}
                     </a>
-
                   </div>
                 </div>
               </div>
@@ -123,4 +120,3 @@ export default function HeroCarousel() {
     </section>
   )
 }
-

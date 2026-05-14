@@ -1,8 +1,8 @@
-import React from 'react';
-import { clsx } from 'clsx';
+import { X } from 'lucide-react'
+import { clsx } from 'clsx'
 
 export const PropertyStatusToggle = ({ value, onChange }) => {
-  const statuses = ['All', 'Sale', 'Rent', 'Under Construction', 'Ready'];
+  const statuses = ['All', 'Sale', 'Rent', 'Under Construction', 'Ready']
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -16,10 +16,10 @@ export const PropertyStatusToggle = ({ value, onChange }) => {
             type="button"
             onClick={() => onChange(status)}
             className={clsx(
-              "flex-1 px-3 py-2 text-xs font-bold rounded-lg transition-all",
+              'flex-1 px-3 py-2 text-xs font-bold rounded-lg transition-all',
               value === status
-                ? "bg-white text-blue-600 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-gray-500 hover:text-gray-700'
             )}
           >
             {status}
@@ -27,18 +27,18 @@ export const PropertyStatusToggle = ({ value, onChange }) => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
 export const FilterChips = ({ filters, onRemove, onClearAll }) => {
   const activeFilters = Object.entries(filters).filter(([key, value]) => {
-    if (!value || value === 'All') return false;
-    if (Array.isArray(value) && value.length === 0) return false;
-    if (key === 'areaUnit') return false; // Don't show unit as a chip
-    return true;
-  });
+    if (!value || value === 'All') return false
+    if (Array.isArray(value) && value.length === 0) return false
+    if (key === 'areaUnit') return false
+    return true
+  })
 
-  if (activeFilters.length === 0) return null;
+  if (activeFilters.length === 0) return null
 
   return (
     <div className="flex flex-wrap items-center gap-2 py-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -46,8 +46,8 @@ export const FilterChips = ({ filters, onRemove, onClearAll }) => {
         Active Filters ({activeFilters.length}):
       </span>
       {activeFilters.map(([key, value]) => {
-        const displayValue = Array.isArray(value) ? value.join(', ') : value;
-        const displayLabel = key.replace(/([A-Z])/g, ' $1').trim();
+        const displayValue = Array.isArray(value) ? value.join(', ') : value
+        const displayLabel = key.replace(/([A-Z])/g, ' $1').trim()
 
         return (
           <div
@@ -65,7 +65,7 @@ export const FilterChips = ({ filters, onRemove, onClearAll }) => {
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
-        );
+        )
       })}
       <button
         type="button"
@@ -75,7 +75,5 @@ export const FilterChips = ({ filters, onRemove, onClearAll }) => {
         Clear All
       </button>
     </div>
-  );
-};
-
-import { X } from 'lucide-react';
+  )
+}
