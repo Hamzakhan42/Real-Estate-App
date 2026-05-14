@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Home, Menu, X } from 'lucide-react'
+import { Home, Menu, X, User } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 import { APP_NAME } from '../../utils/constants'
 import { cn } from '../../utils/cn'
@@ -102,12 +103,13 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <a
-              href="#featured"
-              className="hidden rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:bg-white/20 sm:inline-flex"
+            <Link
+              to="/profile"
+              className="hidden rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white backdrop-blur transition hover:bg-white/20 sm:inline-flex items-center gap-2"
             >
-              Explore
-            </a>
+              <User className="w-4 h-4" />
+              Account
+            </Link>
 
             <button
               type="button"

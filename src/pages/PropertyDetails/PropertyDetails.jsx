@@ -10,6 +10,7 @@ import { properties } from '../../utils/mockData'
 import { stripTicks } from '../../utils/format'
 import { setupLeafletIcons } from '../../utils/leaflet'
 import Navbar from '../../components/layout/Navbar'
+import MessengerChat from '../../components/features/MessengerChat'
 
 setupLeafletIcons()
 
@@ -69,6 +70,7 @@ const PropertyDetails = () => {
   const property = properties.find((p) => p.id === parseInt(id))
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isChatOpen, setIsChatOpen] = useState(false)
 
   const allImages = property ? [property.image, ...(property.images || [])] : []
 
@@ -226,7 +228,10 @@ const PropertyDetails = () => {
                 <h3 className="text-xl font-bold mb-4">Interested in this?</h3>
                 <p className="text-slate-400 text-sm mb-6">Contact our agent today to schedule a viewing or get more details.</p>
                 <div className="space-y-4">
-                  <button className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl transition-all active:scale-[0.98]">
+                  <button 
+                    onClick={() => setIsChatOpen(true)}
+                    className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-xl transition-all active:scale-[0.98]"
+                  >
                     Send Message
                   </button>
                   <button className="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-4 rounded-xl transition-all border border-white/10">
@@ -261,6 +266,16 @@ const PropertyDetails = () => {
           onNext={nextImage}
           onPrev={prevImage}
         />
+      )}
+
+      {/* Floating Messenger Chat */}
+      {isChatOpen && (
+        <div className="fixed bottom-6 right-6 z-[100] w-full max-w-[380px] drop-shadow-2xl">
+          <MessengerChat 
+            property={{ name: property.name }}
+            onClose={() => setIsChatOpen(false)}
+          />
+        </div>
       )}
     </div>
   )
