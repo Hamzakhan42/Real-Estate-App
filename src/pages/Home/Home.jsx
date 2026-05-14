@@ -2,6 +2,9 @@ import Navbar from '../../components/layout/Navbar'
 import HeroCarousel from '../../components/features/HeroCarousel'
 import AdvancedSearchBar from '../../components/features/AdvancedSearchBar/AdvancedSearchBar'
 import FeaturedApartmentsMarquee from '../../components/features/FeaturedApartmentsMarquee'
+import PropertyMap from '../../components/features/PropertyMap'
+import { MOCK_PROPERTIES } from '../../data/mockProperties'
+import { properties as FEATURED_PROPERTIES } from '../../utils/mockData'
 
 export default function Home() {
   return (
@@ -126,6 +129,20 @@ export default function Home() {
               ))}
             </ul>
           </div>
+        </div>
+      </section>
+
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 text-center">
+            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+              Explore Properties on Map
+            </h2>
+            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+              Easily find homes in your favorite neighborhoods with our interactive map view.
+            </p>
+          </div>
+          <PropertyMap properties={[...MOCK_PROPERTIES, ...FEATURED_PROPERTIES]} />
         </div>
       </section>
 
